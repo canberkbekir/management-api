@@ -19,7 +19,7 @@ type UserRepository struct {
 }
 
 func (u UserRepository) GetAll() ([]model.User, error) {
-	var users []model.User
+	users := make([]model.User, 0)
 	result, err := u.cbClient.Query("SELECT * FROM users", &gocb.QueryOptions{})
 	if err != nil {
 		util.Logger.Error().Err(err).Msg("Error querying users")
@@ -55,7 +55,11 @@ func (u UserRepository) GetById(id string) (*model.User, error) {
 }
 
 func (u UserRepository) Upsert(user *model.User) error {
-	id := "user_" + uuid.New().String()
+	newUUID := uuid.New().String()
+	id := "user_" + newUUID
+	user.ID = newUUID
+	user.Status = true
+
 	_, err := u.cbClient.Bucket("users").DefaultCollection().Upsert(id, user, &gocb.UpsertOptions{})
 	if err != nil {
 		return err
