@@ -2,11 +2,12 @@ package repository
 
 import (
 	"github.com/couchbase/gocb/v2"
+	"github.com/google/uuid"
 	"management-api/internal/model"
 	"management-api/internal/util"
 )
 
-type IUserRepostiory interface {
+type IUserRepository interface {
 	GetAll() ([]model.User, error)
 	GetById(id string) (*model.User, error)
 	Upsert(user *model.User) error
@@ -19,8 +20,6 @@ type UserRepository struct {
 
 func (u UserRepository) GetAll() ([]model.User, error) {
 	var users []model.User
-	u.cbClient.Bucket("users").DefaultCollection()
-
 	result, err := u.cbClient.Query("SELECT * FROM users", &gocb.QueryOptions{})
 	if err != nil {
 		util.Logger.Error().Err(err).Msg("Error querying users")
@@ -38,13 +37,30 @@ func (u UserRepository) GetAll() ([]model.User, error) {
 }
 
 func (u UserRepository) GetById(id string) (*model.User, error) {
-	//TODO implement me
-	panic("implement me")
+	getResult, err := u.cbClient.Bucket("users").DefaultCollection().Get(id, &gocb.GetOptions{})
+
+	if err != nil {
+		return nil, err
+	}
+
+	if getResult == nil {
+		return &model.User{}, nil
+	}
+
+	var user model.User
+	if err := getResult.Content(&user); err != nil {
+		return nil, err
+	}
+	return &user, nil
 }
 
 func (u UserRepository) Upsert(user *model.User) error {
-	//TODO implement me
-	panic("implement me")
+	id := "user_" + uuid.New().String()
+	_, err := u.cbClient.Bucket("users").DefaultCollection().Upsert(id, user, &gocb.UpsertOptions{})
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func (u UserRepository) Delete(id string) error {
@@ -52,7 +68,7 @@ func (u UserRepository) Delete(id string) error {
 	panic("implement me")
 }
 
-func NewUserRepository(cbClient *gocb.Cluster) IUserRepostiory {
+func NewUserRepository(cbClient *gocb.Cluster) IUserRepository {
 	return &UserRepository{
 		cbClient: cbClient,
 	}
