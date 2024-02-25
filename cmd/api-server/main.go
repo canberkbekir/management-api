@@ -2,6 +2,7 @@ package main
 
 import (
 	"management-api/internal/config"
+	"management-api/internal/repository"
 	"management-api/internal/util"
 	"net/http"
 	"time"
@@ -17,11 +18,14 @@ func main() {
 		MaxHeaderBytes: 1 << 20,
 	}
 	coucheBaseConfig := config.NewConfig().Couchbase
-	_, err := config.NewCouchebaseClient(&coucheBaseConfig)
+	test, err := config.NewCouchebaseClient(&coucheBaseConfig)
 	if err != nil {
 		util.Logger.Fatal().Err(err).Msg("Error connecting to couchbase")
 	}
 
+	repository.NewUserRepository(test)
+	result, _ := repository.NewUserRepository(test).GetAll()
+	util.Logger.Info().Msgf("Result: %v", result)
 	util.Logger.Info().Msgf("Server started on port %s", serverConfig.Port)
 	if err := server.ListenAndServe(); err != nil {
 		util.Logger.Fatal().Err(err).Msg("Server failed to start")

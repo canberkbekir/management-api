@@ -3,6 +3,6 @@ local:
     port: "8080"
   couchbase:
     host: "localhost"
-    bucket: "management-api"
+    bucket: "users"
     username: "Administrator"
     password: "28072000"

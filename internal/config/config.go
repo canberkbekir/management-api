@@ -45,7 +45,7 @@ func (c *ApplicationConfig) readApplicationConfig() {
 	v.SetTypeByDefaultValue(true)
 	v.SetConfigName("application")
 	v.SetConfigType("yaml")
-	v.AddConfigPath("./internal/config/")
+	v.AddConfigPath("./config/")
 
 	err := v.ReadInConfig()
 	if err != nil {

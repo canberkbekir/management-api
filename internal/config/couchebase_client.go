@@ -20,15 +20,12 @@ func NewCouchebaseClient(config *CouchbaseConfig) (*gocb.Cluster, error) {
 		return nil, err
 	}
 
-	util.Logger.Info().Msg("Connected to couchbase")
-
 	bucket := cluster.Bucket(config.Bucket)
 	err = bucket.WaitUntilReady(5*time.Second, nil)
 	if err != nil {
 		util.Logger.Fatal().Err(err).Msg("Error connecting to couchbase bucket")
 		return nil, err
 	}
-
-	util.Logger.Info().Msg("Connected to couchbase bucket")
+	util.Logger.Info().Msg("Connected to couchbase")
 	return cluster, nil
 }

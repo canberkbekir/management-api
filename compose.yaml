@@ -1,0 +1,20 @@
+services:
+  couchbase:
+    image: couchbase
+    container_name: couchbase
+    hostname: couchbase
+    ports:
+      - "8091-8094:8091-8094" # Couchbase Web Console and API
+      - "11210:11210"         # Couchbase data
+    environment:
+      - COUCHBASE_ADMINISTRATOR_USERNAME=admin
+      - COUCHBASE_ADMINISTRATOR_PASSWORD=password
+    volumes:
+      - couchbase_data:/opt/couchbase/var
+    networks:
+      - cqrs-net
+networks:
+  cqrs-net:
+    driver: bridge
+volumes:
+  couchbase_data:
