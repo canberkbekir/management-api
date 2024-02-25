@@ -1,0 +1,8 @@
+local:
+  server:
+    port: "8080"
+  couchbase:
+    host: "localhost"
+    bucket: "management-api"
+    username: "Administrator"
+    password: "28072000"
