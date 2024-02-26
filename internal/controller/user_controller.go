@@ -55,10 +55,3 @@ func (controller *UserController) DeleteUser(c echo.Context) error {
 	}
 	return c.JSON(200, "Deleted")
 }
-
-func (controller *UserController) Register(e *echo.Echo) {
-	e.GET("/user", controller.GetAllUser)
-	e.GET("/user/:id", controller.GetUserById)
-	e.POST("/user", controller.UpsertUser)
-	e.DELETE("/user/:id", controller.DeleteUser)
-}

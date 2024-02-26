@@ -5,7 +5,7 @@ type User struct {
 	Name     string `json:"name,omitempty"`
 	Email    string `json:"email,omitempty"`
 	Password string `json:"password,omitempty"`
-	Status   bool   `json:"status,omitempty"`
+	Status   int    `json:"status,omitempty"`
 	Role     []Role `json:"role,omitempty"`
 	BaseModel
 }

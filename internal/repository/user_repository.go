@@ -5,6 +5,7 @@ import (
 	"github.com/google/uuid"
 	"management-api/internal/model"
 	"management-api/internal/util"
+	"time"
 )
 
 type IUserRepository interface {
@@ -55,15 +56,22 @@ func (u UserRepository) GetById(id string) (*model.User, error) {
 }
 
 func (u UserRepository) Upsert(user *model.User) error {
-	newUUID := uuid.New().String()
-	id := "user_" + newUUID
-	user.ID = newUUID
-	user.Status = true
+	// If the user doesn't have an ID, generate a new one
+	if user.ID == "" {
+		newUUID := uuid.New().String()
+		user.ID = "user_" + newUUID
+		user.Status = 0
+		user.CreatedAt = time.Now()
+	}
+	// Set the updated timestamp
+	user.UpdatedAt = time.Now()
 
-	_, err := u.cbClient.Bucket("users").DefaultCollection().Upsert(id, user, &gocb.UpsertOptions{})
+	// Perform the upsert operation
+	_, err := u.cbClient.Bucket("users").DefaultCollection().Upsert(user.ID, user, &gocb.UpsertOptions{})
 	if err != nil {
 		return err
 	}
+
 	return nil
 }
 
