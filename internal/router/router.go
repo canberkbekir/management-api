@@ -3,6 +3,7 @@ package router
 import (
 	"github.com/couchbase/gocb/v2"
 	"github.com/labstack/echo/v4"
+	echoSwagger "github.com/swaggo/echo-swagger"
 	"management-api/internal/controller"
 	"management-api/internal/middleware"
 	"management-api/internal/repository"
@@ -12,6 +13,7 @@ import (
 func Init(cluster *gocb.Cluster) *echo.Echo {
 	e := echo.New()
 	e.Use(middleware.LoggingMiddleware)
+	e.GET("/swagger/*", echoSwagger.WrapHandler)
 
 	// Initialize the controller, service, and repository for the user
 	userRepository := repository.NewUserRepository(cluster)
