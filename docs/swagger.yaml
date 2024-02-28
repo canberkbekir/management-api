@@ -1,4 +1,4 @@
-basePath: /v1
+basePath: /api
 definitions:
   model.Role:
     properties:
@@ -36,21 +36,25 @@ definitions:
       updatedAt:
         type: string
     type: object
+host: localhost:8080
 info:
-  contact: { }
-  description: This is a sample server Petstore server.
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: Testing Swagger APIs.
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   termsOfService: http://swagger.io/terms/
-  title: Swagger Example API
+  title: Management API
   version: "1.0"
 paths:
-  /api/user:
+  /user:
     get:
       consumes:
         - application/json
-      description: Get all users
+      description: Get all Users
       produces:
         - application/json
       responses:
@@ -60,7 +64,37 @@ paths:
             items:
               $ref: '#/definitions/model.User'
             type: array
-      summary: Get all users
+      summary: Get all Users
       tags:
-        - user
+        - User
+  /user/:id:
+    get:
+      consumes:
+        - application/json
+      description: Get users by ID
+      parameters:
+        - description: User ID
+          in: path
+          name: id
+          required: true
+          type: string
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              items:
+                $ref: '#/definitions/model.User'
+              type: array
+            type: array
+      summary: Get users by ID
+      tags:
+        - User
+securityDefinitions:
+  JWT:
+    in: header
+    name: token
+    type: apiKey
 swagger: "2.0"

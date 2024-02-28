@@ -22,12 +22,12 @@ func Init(cluster *gocb.Cluster) *echo.Echo {
 
 	api := e.Group("/api")
 	{
-		api.Group("/user")
+		user := api.Group("/user")
 		{
-			api.GET("", userController.GetAllUser)
-			api.GET("/id/:id", userController.GetUserById)
-			api.POST("", userController.UpsertUser)
-			api.DELETE("/id/:id", userController.DeleteUser)
+			user.GET("", userController.GetAllUser)
+			user.GET("/id/:id", userController.GetUserById)
+			user.POST("", userController.UpsertUser)
+			user.DELETE("/id/:id", userController.DeleteUser)
 		}
 	}
 

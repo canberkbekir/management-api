@@ -17,14 +17,13 @@ func NewUserController(service service.IUserService) *UserController {
 
 // GetAllUser godoc
 //
-//	@Summary		Get all users
-//	@Description	Get all users
-//	@Tags			user
+//	@Summary		Get all Users
+//	@Description	Get all Users
+//	@Tags			User
 //	@Accept			json
 //	@Produce		json
 //	@Success		200	{array}	model.User
-//
-// @Router			/api/user [get]
+//	@Router			/user [get]
 func (controller *UserController) GetAllUser(c echo.Context) error {
 	res, err := controller.service.GetAllUser()
 	if err != nil {
@@ -33,6 +32,16 @@ func (controller *UserController) GetAllUser(c echo.Context) error {
 	return c.JSON(200, res)
 }
 
+// GetUserById godoc
+//
+//	@Summary		Get users by ID
+//	@Description	Get users by ID
+//	@Tags			User
+//	@Accept			json
+//	@Produce		json
+//	@Success		200	{array}	[]model.User
+//	@Param			id	path	string	true	"User ID"
+//	@Router			/user/id/:id [get]
 func (controller *UserController) GetUserById(c echo.Context) error {
 	id := c.Param("id")
 

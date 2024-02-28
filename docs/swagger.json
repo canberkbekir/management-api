@@ -1,21 +1,26 @@
 {
   "swagger": "2.0",
   "info": {
-    "description": "This is a sample server Petstore server.",
-    "title": "Swagger Example API",
+    "description": "Testing Swagger APIs.",
+    "title": "Management API",
     "termsOfService": "http://swagger.io/terms/",
-    "contact": {},
+    "contact": {
+      "name": "API Support",
+      "url": "http://www.swagger.io/support",
+      "email": "support@swagger.io"
+    },
     "license": {
       "name": "Apache 2.0",
       "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
     },
     "version": "1.0"
   },
-  "basePath": "/v1",
+  "host": "localhost:8080",
+  "basePath": "/api",
   "paths": {
-    "/api/user": {
+    "/user": {
       "get": {
-        "description": "Get all users",
+        "description": "Get all Users",
         "consumes": [
           "application/json"
         ],
@@ -23,9 +28,9 @@
           "application/json"
         ],
         "tags": [
-          "user"
+          "User"
         ],
-        "summary": "Get all users",
+        "summary": "Get all Users",
         "responses": {
           "200": {
             "description": "OK",
@@ -33,6 +38,44 @@
               "type": "array",
               "items": {
                 "$ref": "#/definitions/model.User"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/:id": {
+      "get": {
+        "description": "Get users by ID",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "User"
+        ],
+        "summary": "Get users by ID",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/definitions/model.User"
+                }
               }
             }
           }
@@ -95,6 +138,13 @@
           "type": "string"
         }
       }
+    }
+  },
+  "securityDefinitions": {
+    "JWT": {
+      "type": "apiKey",
+      "name": "token",
+      "in": "header"
     }
   }
 }
