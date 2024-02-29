@@ -32,9 +32,9 @@ func main() {
 
 	util.InitLog()
 	serverConfig := config.NewConfig().Server
-	coucheBaseConfig := config.NewConfig().Couchbase
+	couchBaseConfig := config.NewConfig().Couchbase
 
-	cluster, err := config.NewCouchebaseClient(&coucheBaseConfig)
+	cluster, err := config.NewCouchebaseClient(&couchBaseConfig)
 	if err != nil {
 		util.Logger.Fatal().Err(err)
 	}

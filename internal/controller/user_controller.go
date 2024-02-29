@@ -52,6 +52,15 @@ func (controller *UserController) GetUserById(c echo.Context) error {
 	return c.JSON(200, res)
 }
 
+// UpsertUser godoc
+//
+//	@Summary		Upsert user
+//	@Description	Upsert user
+//	@Tags			User
+//	@Accept			json
+//	@Produce		json
+//	@Success		200	{object}	model.User
+//	@Router			/user [post]
 func (controller *UserController) UpsertUser(c echo.Context) error {
 	var requestBody model.User
 	err := json.NewDecoder(c.Request().Body).Decode(&requestBody)
@@ -65,6 +74,16 @@ func (controller *UserController) UpsertUser(c echo.Context) error {
 	return c.JSON(200, requestBody)
 }
 
+// DeleteUser godoc
+//
+//	@Summary		Delete user
+//	@Description	Delete user
+//	@Tags			User
+//	@Accept			json
+//	@Produce		json
+//	@Success		200	{string}	string
+//	@Param			id	path	string	true	"User ID"
+//	@Router			/user/id/:id [delete]
 func (controller *UserController) DeleteUser(c echo.Context) error {
 	id := c.Param("id")
 

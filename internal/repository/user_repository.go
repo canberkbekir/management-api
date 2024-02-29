@@ -29,6 +29,7 @@ func (u UserRepository) GetAll() ([]model.User, error) {
 
 	for result.Next() {
 		var user model.User
+
 		if err := result.Row(&user); err != nil {
 			return nil, err
 		}
@@ -38,7 +39,8 @@ func (u UserRepository) GetAll() ([]model.User, error) {
 }
 
 func (u UserRepository) GetById(id string) (*model.User, error) {
-	getResult, err := u.cbClient.Bucket("users").DefaultCollection().Get(id, &gocb.GetOptions{})
+	key := "user_" + id
+	getResult, err := u.cbClient.Bucket("users").DefaultCollection().Get(key, &gocb.GetOptions{})
 
 	if err != nil {
 		return nil, err
@@ -56,28 +58,36 @@ func (u UserRepository) GetById(id string) (*model.User, error) {
 }
 
 func (u UserRepository) Upsert(user *model.User) error {
-	// If the user doesn't have an ID, generate a new one
+	// Generate a new ID if it doesn't exist
 	if user.ID == "" {
-		newUUID := uuid.New().String()
-		user.ID = "user_" + newUUID
+		user.ID = uuid.New().String()
 		user.Status = 0
 		user.CreatedAt = time.Now()
 	}
-	// Set the updated timestamp
+
+	// Update the timestamp
 	user.UpdatedAt = time.Now()
 
-	// Perform the upsert operation
-	_, err := u.cbClient.Bucket("users").DefaultCollection().Upsert(user.ID, user, &gocb.UpsertOptions{})
-	if err != nil {
-		return err
+	// Hash the password
+	if user.Password != "" {
+		password, err := util.HashPassword(user.Password)
+		if err != nil {
+			return err
+		}
+		user.Password = password
 	}
 
-	return nil
+	_, err := u.cbClient.Bucket("users").DefaultCollection().Upsert("user_"+user.ID, user, &gocb.UpsertOptions{})
+	return err
 }
 
 func (u UserRepository) Delete(id string) error {
-	//TODO implement me
-	panic("implement me")
+	remove, err := u.cbClient.Bucket("users").DefaultCollection().Remove("user_"+id, &gocb.RemoveOptions{})
+	if err != nil {
+		return err
+	}
+	util.Logger.Debug().Msgf("Removed user: %s", remove.Cas())
+	return nil
 }
 
 func NewUserRepository(cbClient *gocb.Cluster) IUserRepository {

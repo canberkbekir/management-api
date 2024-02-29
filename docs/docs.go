@@ -48,9 +48,30 @@ const docTemplate = `{
                         }
                     }
                 }
+            },
+            "post": {
+                "description": "Upsert user",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "Upsert user",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.User"
+                        }
+                    }
+                }
             }
         },
-        "/user/:id": {
+        "/user/id/:id": {
             "get": {
                 "description": "Get users by ID",
                 "consumes": [
@@ -83,6 +104,36 @@ const docTemplate = `{
                                     "$ref": "#/definitions/model.User"
                                 }
                             }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete user",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "Delete user",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
                         }
                     }
                 }
