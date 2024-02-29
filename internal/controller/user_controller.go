@@ -82,7 +82,7 @@ func (controller *UserController) UpsertUser(c echo.Context) error {
 //	@Accept			json
 //	@Produce		json
 //	@Success		200	{string}	string
-//	@Param			id	path	string	true	"User ID"
+//	@Param			id	path		string	true	"User ID"
 //	@Router			/user/id/:id [delete]
 func (controller *UserController) DeleteUser(c echo.Context) error {
 	id := c.Param("id")

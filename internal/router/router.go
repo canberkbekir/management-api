@@ -20,6 +20,11 @@ func Init(cluster *gocb.Cluster) *echo.Echo {
 	userService := service.NewUserService(userRepository)
 	userController := controller.NewUserController(userService)
 
+	// Initialize the controller, service, and repository for the role
+	roleRepository := repository.NewRoleRepository(cluster)
+	roleService := service.NewRoleService(roleRepository)
+	roleController := controller.NewRoleController(roleService)
+
 	api := e.Group("/api")
 	{
 		user := api.Group("/user")
@@ -28,6 +33,14 @@ func Init(cluster *gocb.Cluster) *echo.Echo {
 			user.GET("/id/:id", userController.GetUserById)
 			user.POST("", userController.UpsertUser)
 			user.DELETE("/id/:id", userController.DeleteUser)
+		}
+
+		role := api.Group("/role")
+		{
+			role.GET("", roleController.GetAllRole)
+			role.GET("/id/:id", roleController.GetRoleById)
+			role.POST("", roleController.UpsertRole)
+			role.DELETE("/id/:id", roleController.DeleteRole)
 		}
 	}
 

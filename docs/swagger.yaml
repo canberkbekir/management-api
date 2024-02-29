@@ -7,7 +7,7 @@ definitions:
       deletedAt:
         type: string
       id:
-        type: integer
+        type: string
       name:
         type: string
       updatedAt:
@@ -50,6 +50,82 @@ info:
   title: Management API
   version: "1.0"
 paths:
+  /role:
+    get:
+      consumes:
+        - application/json
+      description: Get all roles
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Role'
+            type: array
+      summary: Get all roles
+      tags:
+        - Role
+    post:
+      consumes:
+        - application/json
+      description: Upsert role
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Role'
+      summary: Upsert role
+      tags:
+        - Role
+  /role/id/:id:
+    delete:
+      consumes:
+        - application/json
+      description: Delete role
+      parameters:
+        - description: Role ID
+          in: path
+          name: id
+          required: true
+          type: string
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Delete role
+      tags:
+        - Role
+    get:
+      consumes:
+        - application/json
+      description: Get roles by ID
+      parameters:
+        - description: role ID
+          in: path
+          name: id
+          required: true
+          type: string
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              items:
+                $ref: '#/definitions/model.Role'
+              type: array
+            type: array
+      summary: Get roles by ID
+      tags:
+        - Role
   /user:
     get:
       consumes:

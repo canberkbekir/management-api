@@ -19,7 +19,7 @@ type RoleRepository struct {
 }
 
 func (r RoleRepository) GetAll() ([]model.Role, error) {
-	var roles []model.Role
+	roles := make([]model.Role, 0)
 	result, err := r.cbClient.Query("SELECT * FROM roles", &gocb.QueryOptions{})
 	if err != nil {
 		util.Logger.Error().Err(err).Msg("Error querying users")
@@ -55,8 +55,9 @@ func (r RoleRepository) GetById(id string) (*model.Role, error) {
 }
 
 func (r RoleRepository) Upsert(role *model.Role) error {
-	id := "role_" + uuid.New().String()
-	_, err := r.cbClient.Bucket("roles").DefaultCollection().Upsert(id, role, &gocb.UpsertOptions{})
+	id := uuid.New().String()
+	role.ID = id
+	_, err := r.cbClient.Bucket("roles").DefaultCollection().Upsert("role_"+id, role, &gocb.UpsertOptions{})
 	if err != nil {
 		return err
 	}
@@ -64,8 +65,11 @@ func (r RoleRepository) Upsert(role *model.Role) error {
 }
 
 func (r RoleRepository) Delete(id string) error {
-	//TODO implement me
-	panic("implement me")
+	_, err := r.cbClient.Bucket("roles").DefaultCollection().Remove("role_"+id, &gocb.RemoveOptions{})
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func NewRoleRepository(cbClient *gocb.Cluster) IRoleRepository {
