@@ -21,7 +21,7 @@ func (u UserService) GetAllUser() ([]model.User, error) {
 }
 
 func (u UserService) GetUserById(id string) (*model.User, error) {
-	return u.GetUserById(id)
+	return u.repository.GetById(id)
 }
 
 func (u UserService) UpsertUser(user *model.User) error {
@@ -29,7 +29,7 @@ func (u UserService) UpsertUser(user *model.User) error {
 }
 
 func (u UserService) DeleteUser(id string) error {
-	return u.DeleteUser(id)
+	return u.repository.Delete(id)
 }
 
 func NewUserService(repository repository.IUserRepository) IUserService {

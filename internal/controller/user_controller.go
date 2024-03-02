@@ -15,6 +15,15 @@ func NewUserController(service service.IUserService) *UserController {
 	return &UserController{service: service}
 }
 
+// GetAllUser godoc
+//
+//	@Summary		Get all Users
+//	@Description	Get all Users
+//	@Tags			User
+//	@Accept			json
+//	@Produce		json
+//	@Success		200	{array}	model.User
+//	@Router			/user [get]
 func (controller *UserController) GetAllUser(c echo.Context) error {
 	res, err := controller.service.GetAllUser()
 	if err != nil {
@@ -23,6 +32,16 @@ func (controller *UserController) GetAllUser(c echo.Context) error {
 	return c.JSON(200, res)
 }
 
+// GetUserById godoc
+//
+//	@Summary		Get users by ID
+//	@Description	Get users by ID
+//	@Tags			User
+//	@Accept			json
+//	@Produce		json
+//	@Success		200	{array}	[]model.User
+//	@Param			id	path	string	true	"User ID"
+//	@Router			/user/id/:id [get]
 func (controller *UserController) GetUserById(c echo.Context) error {
 	id := c.Param("id")
 
@@ -33,6 +52,15 @@ func (controller *UserController) GetUserById(c echo.Context) error {
 	return c.JSON(200, res)
 }
 
+// UpsertUser godoc
+//
+//	@Summary		Upsert user
+//	@Description	Upsert user
+//	@Tags			User
+//	@Accept			json
+//	@Produce		json
+//	@Success		200	{object}	model.User
+//	@Router			/user [post]
 func (controller *UserController) UpsertUser(c echo.Context) error {
 	var requestBody model.User
 	err := json.NewDecoder(c.Request().Body).Decode(&requestBody)
@@ -46,6 +74,16 @@ func (controller *UserController) UpsertUser(c echo.Context) error {
 	return c.JSON(200, requestBody)
 }
 
+// DeleteUser godoc
+//
+//	@Summary		Delete user
+//	@Description	Delete user
+//	@Tags			User
+//	@Accept			json
+//	@Produce		json
+//	@Success		200	{string}	string
+//	@Param			id	path		string	true	"User ID"
+//	@Router			/user/id/:id [delete]
 func (controller *UserController) DeleteUser(c echo.Context) error {
 	id := c.Param("id")
 
@@ -54,11 +92,4 @@ func (controller *UserController) DeleteUser(c echo.Context) error {
 		return c.JSON(500, err)
 	}
 	return c.JSON(200, "Deleted")
-}
-
-func (controller *UserController) Register(e *echo.Echo) {
-	e.GET("/user", controller.GetAllUser)
-	e.GET("/user/:id", controller.GetUserById)
-	e.POST("/user", controller.UpsertUser)
-	e.DELETE("/user/:id", controller.DeleteUser)
 }
